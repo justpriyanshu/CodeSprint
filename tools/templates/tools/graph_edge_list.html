@@ -1,0 +1,102 @@
+{% extends "tools/base.html" %}
+{% load static %}
+
+{% block title %}Graph Edge-List Formatter — ILoveCode{% endblock %}
+
+{% block breadcrumb %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <nav class="flex items-center gap-2 text-xs text-gray-500">
+        <a href="{% url 'tools:index' %}" class="hover:text-accent-cyan transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-400">{{ tool.name }}</span>
+        <span class="ml-auto font-mono text-[10px] text-gray-600">{{ tool.usage_count }} uses</span>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-white mb-2">{{ tool.name }}</h2>
+    <p class="text-gray-400 text-sm">Paste raw edge listings and get instant adjacency list, adjacency matrix, and vector-of-pairs representations.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input Panel -->
+    <div class="space-y-4">
+        <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-6">
+            <label for="edge-input" class="block text-sm font-semibold text-gray-300 mb-3">Edge List Input</label>
+            <textarea id="edge-input" rows="10" placeholder="1 2&#10;2 3&#10;3 4&#10;1 4"
+                class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-accent-cyan/50 focus:ring-1 focus:ring-accent-cyan/20 resize-none transition-all"></textarea>
+
+            <div class="flex flex-wrap gap-4 mt-4">
+                <!-- Indexing Toggle -->
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-gray-400 font-medium">Indexing:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-index" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span id="index-label" class="text-xs font-mono text-accent-cyan">1-indexed</span>
+                </div>
+
+                <!-- Directed Toggle -->
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-gray-400 font-medium">Type:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-directed">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span id="directed-label" class="text-xs font-mono text-accent-blue">Undirected</span>
+                </div>
+            </div>
+
+            <button onclick="parseEdgeList()" class="mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-blue text-surface-900 font-bold text-sm hover:opacity-90 active:scale-[0.98] transition-all duration-150">
+                Parse Edge List
+            </button>
+        </div>
+    </div>
+
+    <!-- Output Panels -->
+    <div class="space-y-4">
+        <!-- Adjacency List -->
+        <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-300">Adjacency List <span class="text-gray-600 font-normal">vector&lt;int&gt; adj[]</span></h3>
+                <button onclick="copyToClipboard('adj-list-output', this)" class="copy-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span>Copy</span>
+                </button>
+            </div>
+            <pre id="adj-list-output" class="output-block">// Parse an edge list to see output</pre>
+        </div>
+
+        <!-- Adjacency Matrix -->
+        <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-300">Adjacency Matrix</h3>
+                <button onclick="copyToClipboard('adj-matrix-output', this)" class="copy-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span>Copy</span>
+                </button>
+            </div>
+            <pre id="adj-matrix-output" class="output-block">// Parse an edge list to see output</pre>
+        </div>
+
+        <!-- Vector of Pairs -->
+        <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-gray-300">Vector of Pairs <span class="text-gray-600 font-normal">vector&lt;pair&lt;int,int&gt;&gt;</span></h3>
+                <button onclick="copyToClipboard('vec-pairs-output', this)" class="copy-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span>Copy</span>
+                </button>
+            </div>
+            <pre id="vec-pairs-output" class="output-block">// Parse an edge list to see output</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'tools/js/graph_edge_list.js' %}"></script>
+{% endblock %}

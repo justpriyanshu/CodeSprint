@@ -1,0 +1,98 @@
+{% extends "tools/base.html" %}
+
+{% block title %}ILoveCode — CP & DSA Toolkit{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="text-center mb-12 pt-4">
+    <h2 class="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+        <span class="bg-gradient-to-r from-accent-cyan via-accent-blue to-accent-purple bg-clip-text text-transparent">
+            Your CP Toolkit
+        </span>
+    </h2>
+    <p class="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
+        Zero bloat. No signup required. One-click parsing, formatting, and analysis for competitive programming & DSA.
+    </p>
+    <div class="mt-6 flex items-center justify-center gap-6 text-xs text-gray-500">
+        <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></span>
+            7 Tools
+        </span>
+        <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-accent-blue animate-pulse" style="animation-delay: 0.5s"></span>
+            3 Categories
+        </span>
+        <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-accent-purple animate-pulse" style="animation-delay: 1s"></span>
+            100% Free
+        </span>
+    </div>
+</div>
+
+<!-- Category Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {% for key, cat in categories.items %}
+    <div class="category-card group relative overflow-hidden rounded-2xl border border-white/5 bg-surface-800/60 backdrop-blur-sm hover:border-white/10 transition-all duration-300">
+        <!-- Gradient glow -->
+        <div class="absolute inset-0 bg-gradient-to-br
+            {% if key == 'graph' %}from-accent-cyan/5 to-transparent
+            {% elif key == 'math' %}from-accent-purple/5 to-transparent
+            {% else %}from-accent-amber/5 to-transparent
+            {% endif %}
+            opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        <div class="relative p-6">
+            <!-- Category Header -->
+            <div class="flex items-start gap-4 mb-5">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0
+                    {% if key == 'graph' %}bg-accent-cyan/10 text-accent-cyan
+                    {% elif key == 'math' %}bg-accent-purple/10 text-accent-purple
+                    {% else %}bg-accent-amber/10 text-accent-amber
+                    {% endif %}">
+                    {{ cat.icon }}
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base leading-tight">{{ cat.title }}</h3>
+                    <p class="text-xs text-gray-500 mt-1 font-medium">{{ cat.subtitle }}</p>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-gradient-to-r from-transparent
+                {% if key == 'graph' %}via-accent-cyan/20
+                {% elif key == 'math' %}via-accent-purple/20
+                {% else %}via-accent-amber/20
+                {% endif %}
+                to-transparent mb-5"></div>
+
+            <!-- Tool List -->
+            <div class="space-y-2">
+                {% for tool in cat.tools %}
+                <a href="{% url 'tools:tool_page' tool.slug %}"
+                   class="tool-link flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-all duration-200 group/link">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold flex-shrink-0
+                            {% if key == 'graph' %}bg-accent-cyan/10 text-accent-cyan
+                            {% elif key == 'math' %}bg-accent-purple/10 text-accent-purple
+                            {% else %}bg-accent-amber/10 text-accent-amber
+                            {% endif %}">
+                            {{ forloop.counter }}
+                        </span>
+                        <span class="text-sm text-gray-300 group-hover/link:text-white transition-colors truncate">
+                            {{ tool.name }}
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="text-[10px] text-gray-600 font-mono">{{ tool.usage_count }}</span>
+                        <svg class="w-4 h-4 text-gray-600 group-hover/link:text-white group-hover/link:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

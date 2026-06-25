@@ -1,0 +1,86 @@
+{% extends "tools/base.html" %}
+{% load static %}
+
+{% block title %}Fast I/O Template Synthesizer — ILoveCode{% endblock %}
+
+{% block breadcrumb %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <nav class="flex items-center gap-2 text-xs text-gray-500">
+        <a href="{% url 'tools:index' %}" class="hover:text-accent-cyan transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-400">{{ tool.name }}</span>
+        <span class="ml-auto font-mono text-[10px] text-gray-600">{{ tool.usage_count }} uses</span>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-white mb-2">{{ tool.name }}</h2>
+    <p class="text-gray-400 text-sm">Select your language and macros — get a clean, copyable competitive programming boilerplate.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input -->
+    <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-6">
+        <!-- Language Tabs -->
+        <div class="flex gap-1 mb-6 bg-surface-900 p-1 rounded-xl">
+            <button onclick="setLanguage('cpp')" id="tab-cpp" class="lang-tab lang-tab-active flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200">C++</button>
+            <button onclick="setLanguage('java')" id="tab-java" class="lang-tab flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200">Java</button>
+            <button onclick="setLanguage('python')" id="tab-python" class="lang-tab flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200">Python</button>
+        </div>
+
+        <!-- Macro Checkboxes -->
+        <div class="space-y-3">
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <input type="checkbox" id="opt-fastio" checked class="custom-checkbox">
+                <div>
+                    <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Fast I/O Optimization</span>
+                    <p class="text-[11px] text-gray-600 mt-0.5">ios::sync_with_stdio / BufferedReader / sys.stdin</p>
+                </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <input type="checkbox" id="opt-typedefs" checked class="custom-checkbox">
+                <div>
+                    <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Typedef Shorthands</span>
+                    <p class="text-[11px] text-gray-600 mt-0.5">ll, vi, pii, vvi, etc.</p>
+                </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <input type="checkbox" id="opt-modular" class="custom-checkbox">
+                <div>
+                    <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Modular Arithmetic Functions</span>
+                    <p class="text-[11px] text-gray-600 mt-0.5">Inline mod-add, mod-mul with MOD = 1e9+7</p>
+                </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <input type="checkbox" id="opt-template" checked class="custom-checkbox">
+                <div>
+                    <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Template Wrapper</span>
+                    <p class="text-[11px] text-gray-600 mt-0.5">Complete main() / solve() structure</p>
+                </div>
+            </label>
+        </div>
+
+        <button onclick="generateTemplate()" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-accent-amber to-orange-500 text-surface-900 font-bold text-sm hover:opacity-90 active:scale-[0.98] transition-all duration-150">
+            Generate Template
+        </button>
+    </div>
+
+    <!-- Output -->
+    <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-300">Generated Boilerplate</h3>
+            <button onclick="copyToClipboard('template-output', this)" class="copy-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <span>Copy</span>
+            </button>
+        </div>
+        <pre id="template-output" class="output-block" style="max-height: 600px;">// Select options and click Generate</pre>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'tools/js/fastio_template.js' %}"></script>
+{% endblock %}

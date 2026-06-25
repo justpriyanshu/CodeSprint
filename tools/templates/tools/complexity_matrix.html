@@ -1,0 +1,62 @@
+{% extends "tools/base.html" %}
+{% load static %}
+
+{% block title %}Time Complexity Matrix — ILoveCode{% endblock %}
+
+{% block breadcrumb %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <nav class="flex items-center gap-2 text-xs text-gray-500">
+        <a href="{% url 'tools:index' %}" class="hover:text-accent-cyan transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-400">{{ tool.name }}</span>
+        <span class="ml-auto font-mono text-[10px] text-gray-600">{{ tool.usage_count }} uses</span>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-white mb-2">{{ tool.name }}</h2>
+    <p class="text-gray-400 text-sm">Input constraint N and time limit — instantly see which complexities PASS or TLE at 10⁸ ops/sec.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input -->
+    <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-6">
+        <div class="space-y-4">
+            <div>
+                <label for="n-input" class="block text-sm font-semibold text-gray-300 mb-2">Constraint N</label>
+                <input type="number" id="n-input" value="100000" min="1" placeholder="e.g. 100000"
+                    class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/20 transition-all">
+            </div>
+            <div>
+                <label for="tl-input" class="block text-sm font-semibold text-gray-300 mb-2">Time Limit (seconds)</label>
+                <input type="number" id="tl-input" value="1" min="0.1" step="0.1" placeholder="e.g. 1"
+                    class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/20 transition-all">
+            </div>
+        </div>
+
+        <button onclick="analyzeComplexity()" class="mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-accent-purple to-accent-pink text-white font-bold text-sm hover:opacity-90 active:scale-[0.98] transition-all duration-150">
+            Analyze Complexities
+        </button>
+    </div>
+
+    <!-- Output -->
+    <div class="rounded-2xl border border-white/5 bg-surface-800/60 p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-300">Complexity Verdict Matrix</h3>
+            <button onclick="copyToClipboard('complexity-output', this)" class="copy-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div id="complexity-output" class="output-block">
+            <p class="text-gray-500">// Set N and time limit, then click Analyze</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'tools/js/complexity_matrix.js' %}"></script>
+{% endblock %}
